@@ -60,6 +60,15 @@ namespace RetroBar.Utilities
                     // Path resolution failed
                 }
             }
+            else
+            {
+                // No target path - this might be a special shell shortcut (like File Explorer)
+                // Check if this is an explorer-related shortcut matching an explorer window
+                if (IsExplorerShortcut(pinnedPath) && IsExplorerWindow(windowExe))
+                {
+                    return true;
+                }
+            }
 
             // Method 2: Filename matching (for apps in same folders)
             try
@@ -78,6 +87,48 @@ namespace RetroBar.Utilities
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks if the shortcut is a File Explorer shortcut (special shell item)
+        /// </summary>
+        private static bool IsExplorerShortcut(string shortcutPath)
+        {
+            if (string.IsNullOrEmpty(shortcutPath))
+                return false;
+
+            try
+            {
+                string fileName = Path.GetFileNameWithoutExtension(shortcutPath);
+                // Match common File Explorer shortcut names
+                return fileName.IndexOf("File Explorer", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                       fileName.IndexOf("Explorer", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                       fileName.IndexOf("This PC", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                       fileName.IndexOf("Computer", StringComparison.OrdinalIgnoreCase) >= 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the window is an Explorer window
+        /// </summary>
+        private static bool IsExplorerWindow(string windowExe)
+        {
+            if (string.IsNullOrEmpty(windowExe))
+                return false;
+
+            try
+            {
+                string fileName = Path.GetFileName(windowExe);
+                return string.Equals(fileName, "explorer.exe", StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -189,6 +240,15 @@ namespace RetroBar.Utilities
                 {
                     path = target;
                 }
+                else
+                {
+                    // No target - check if it's a special explorer shortcut
+                    if (IsExplorerShortcut(path))
+                    {
+                        // Use a consistent key for all explorer shortcuts
+                        return "explorer.exe";
+                    }
+                }
             }
 
             try
@@ -208,6 +268,12 @@ namespace RetroBar.Utilities
         {
             if (window == null)
                 return null;
+
+            // Special handling for explorer.exe windows - use consistent key
+            if (!string.IsNullOrEmpty(window.WinFileName) && IsExplorerWindow(window.WinFileName))
+            {
+                return "explorer.exe";
+            }
 
             // Prefer AppUserModelID for UWP apps
             if (!string.IsNullOrEmpty(window.AppUserModelID))
