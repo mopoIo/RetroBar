@@ -515,6 +515,16 @@ namespace RetroBar.Controls
                     taskbarItems?.Refresh();
                 }
             }
+            else if (e.PropertyName == nameof(Settings.Theme))
+            {
+                // Delay until after theme resources are loaded and layout is complete
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    // Reload theme-specific values and reapply button width
+                    SetStyles();
+                    SetTaskButtonWidth();
+                }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+            }
             else if (e.PropertyName == nameof(Settings.CompressTaskbarButtons))
             {
                 SetTaskButtonWidth();
@@ -654,6 +664,10 @@ namespace RetroBar.Controls
         {
             if (Host is null)
                 return; // The state is trashed, but presumably it's just a transition
+
+            // Skip if layout isn't ready yet (e.g., during theme change)
+            if (TasksList.ActualWidth <= 0)
+                return;
 
             if (Settings.Instance.Edge == AppBarEdge.Left || Settings.Instance.Edge == AppBarEdge.Right)
             {

@@ -418,7 +418,7 @@
     <BitmapImage x:Key="StartIconImage"
                  UriSource="../Resources/startxpblue.png" />
     <BitmapImage x:Key="StartButtonImage"
-                 UriSource="../Resources/startxpbluebutton.png" />
+                 UriSource="../Resources/startxpbluebutton-logoonly.png" />
     <BitmapImage x:Key="ShowDesktopIconImageSmall"
                  UriSource="../Resources/desktopxp-sm.png" />
     <BitmapImage x:Key="ShowDesktopIconImageLarge"
@@ -1537,7 +1537,7 @@
         <Setter Property="Margin"
                 Value="0,0,1,-3" />
         <Setter Property="MinWidth"
-                Value="99" />
+                Value="42" />
         <Setter Property="Height"
                 Value="32" />
         <Setter Property="FocusVisualStyle"
@@ -1622,7 +1622,7 @@
            x:Key="StartIcon"
            BasedOn="{StaticResource StartIcon}">
         <Setter Property="Margin"
-                Value="10,0,0,0" />
+                Value="8,0,9,0" />
         <Setter Property="Width"
                 Value="25" />
         <Setter Property="Height"
@@ -1632,22 +1632,8 @@
     <Style TargetType="TextBlock"
            x:Key="StartLabel"
            BasedOn="{StaticResource StartLabel}">
-        <Setter Property="Text"
-                Value="{DynamicResource start_text_xp}" />
-        <Setter Property="FontFamily"
-                Value="{DynamicResource start_text_xp_font_family}" />
-        <Setter Property="FontSize"
-                Value="19" />
-        <Setter Property="FontStyle"
-                Value="Italic" />
-        <Setter Property="FontWeight"
-                Value="Normal" />
-        <Setter Property="Margin"
-                Value="0,0,26,0" />
-        <Setter Property="Effect"
-                Value="{DynamicResource StartLabelShadow}" />
-        <Setter Property="TextOptions.TextRenderingMode"
-                Value="Grayscale" />
+        <Setter Property="Visibility"
+                Value="Collapsed" />
     </Style>
 
     <Style TargetType="TextBlock"
